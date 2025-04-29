@@ -10,11 +10,11 @@ export default function SignUpPage() {
         <h2 className='text-xl'>Please fill in the form below to join</h2>
       </div>
       <form className='flex flex-col gap-4'>
-        <FormInput type='text' placeholder="Username" required />
-        <FormInput type='email' placeholder="Email" required />
-        <FormInput type='password' placeholder="Password" required />
-        <FormInput type='password' placeholder="Confirm Password" required />
-        <FormButton text='Create Account' isLoading={false} />
+        <FormInput type='text' placeholder="Username" required name='username'/>
+        <FormInput type='email' placeholder="Email" required name='email'/>
+        <FormInput type='password' placeholder="Password" required name='password'/>
+        <FormInput type='password' placeholder="Confirm Password" required name='confirmPassword'/>
+        <FormButton text='Create Account' />
       </form>
       <SocialLogin />
     </section>

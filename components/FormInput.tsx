@@ -3,9 +3,10 @@ type FormInputProps = {
   placeholder?: string;
   required?: boolean;
   error?: string[];
+  name: string;
 }
 
-export default function FormInput({type, placeholder, required=false, error}: FormInputProps) {
+export default function FormInput({type, placeholder, required=false, error, name}: FormInputProps) {
   return (
     <div className='flex flex-col gap-2'>
       <input
@@ -13,6 +14,7 @@ export default function FormInput({type, placeholder, required=false, error}: Fo
         type={type}
         placeholder={placeholder}
         required={required}
+        name={name}
       />
       {
         error && error.length > 0 && error.map((errorText, index) => (
