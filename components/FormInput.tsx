@@ -2,11 +2,13 @@ type FormInputProps = {
   type: string;
   placeholder?: string;
   required?: boolean;
-  error?: string[];
+  errors?: string[];
   name: string;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export default function FormInput({type, placeholder, required=false, error, name}: FormInputProps) {
+export default function FormInput({type, placeholder, required=false, errors=[], name, value, onChange}: FormInputProps) {
   return (
     <div className='flex flex-col gap-2'>
       <input
@@ -15,10 +17,12 @@ export default function FormInput({type, placeholder, required=false, error, nam
         placeholder={placeholder}
         required={required}
         name={name}
+        onChange={onChange}
+        value={value}
       />
       {
-        error && error.length > 0 && error.map((errorText, index) => (
-          <span key={index} className='text-red-500 font-medium'>{errorText}</span>
+        errors.length > 0 && errors.map((errorText, index) => (
+          <span key={index} className='text-red-400 font-medium leading-4'>{errorText}</span>
         ))
       }
     </div>
