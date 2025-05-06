@@ -1,21 +1,22 @@
 'use server';
 
+import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, USERNAME_MAX_LENGTH, USERNAME_MIN_LENGTH } from '@/lib/constants';
 import { z } from 'zod';
 
 const formSchema = z
   .object({
     username: z
       .string({ required_error: 'Username is required.' })
-      .min(3, 'Username must be at least 3 charanters')
-      .max(15, 'Username should not exceed 15 characters')
+      .min(USERNAME_MIN_LENGTH, 'Username must be at least 3 charanters')
+      .max(USERNAME_MAX_LENGTH, 'Username should not exceed 15 characters')
       .regex(/[A-Za-z]/, 'Must include at least one character')
       .toLowerCase()
       .trim(),
     email: z.string().email().toLowerCase().trim(),
     password: z
       .string()
-      .min(8, 'Password must be at least 8 characters')
-      .max(24, 'Password must be less than 24 characters')
+      .min(PASSWORD_MIN_LENGTH, 'Password must be at least 8 characters')
+      .max(PASSWORD_MAX_LENGTH, 'Password must be less than 24 characters')
       .regex(/[A-Z]/, 'Must include at least one uppercase letter')
       .regex(/[a-z]/, 'Must include at least one lowercase letter')
       .regex(/[0-9]/, 'Must include at least one number')
