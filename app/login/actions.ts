@@ -17,7 +17,8 @@ const formSchema = z
 
   });
 
-export const login = async (prevState: any, formData: FormData) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const login = async (_: any, formData: FormData) => {
   const data = {
     email: formData.get('email'),
     password: formData.get('password'),

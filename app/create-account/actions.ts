@@ -28,7 +28,9 @@ const formSchema = z
     path: ['confirmPassword'],
   });
 
-export const handleFormSubmit = async (prevState: any, formData: FormData) => {
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  export const handleFormSubmit = async (_: any, formData: FormData) => {
   const data = {
     username: formData.get('username'),
     email: formData.get('email'),
