@@ -3,6 +3,7 @@
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, USERNAME_MAX_LENGTH, USERNAME_MIN_LENGTH } from '@/lib/constants';
 import db from '@/lib/db';
 import { z } from 'zod';
+import bcrypt from 'bcrypt';
 
 const isExistByUsername = async (username: string) => {
   const user = await db.user.findUnique({
@@ -67,5 +68,18 @@ const formSchema = z
   const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
     return result.error.flatten();
+  } else {
+    const {username, email, password} = result.data
+    const hashedPassword = await bcrypt.hash(password, 12)
+    const user = await db.user.create({
+      data: {
+        username,
+        email,
+        password: hashedPassword
+      },
+      select: {
+        id: true
+      }
+    })
   }
 };
