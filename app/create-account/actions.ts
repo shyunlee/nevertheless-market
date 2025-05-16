@@ -1,18 +1,44 @@
 'use server';
 
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, USERNAME_MAX_LENGTH, USERNAME_MIN_LENGTH } from '@/lib/constants';
+import db from '@/lib/db';
 import { z } from 'zod';
+
+const isExistByUsername = async (username: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      username
+    },
+    select: {
+      id: true
+    }
+  })
+  return !Boolean(user)
+}
+
+const isExistByEmail = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email
+    },
+    select: {
+      id: true
+    }
+  })
+  return !Boolean(user)
+}
 
 const formSchema = z
   .object({
     username: z
-      .string({ required_error: 'Username is required.' })
+      .string({ required_error: 'Username is required' })
       .min(USERNAME_MIN_LENGTH, 'Username must be at least 3 charanters')
       .max(USERNAME_MAX_LENGTH, 'Username should not exceed 15 characters')
       .regex(/[A-Za-z]/, 'Must include at least one character')
       .toLowerCase()
-      .trim(),
-    email: z.string().email().toLowerCase().trim(),
+      .trim()
+      .refine(isExistByUsername, 'This username is already taken'),
+    email: z.string().email().toLowerCase().trim().refine(isExistByEmail, 'There is an account already registered with this email'),
     password: z
       .string()
       .min(PASSWORD_MIN_LENGTH, 'Password must be at least 8 characters')
@@ -30,7 +56,7 @@ const formSchema = z
 
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  export const handleFormSubmit = async (_: any, formData: FormData) => {
+  export const createAccount = async (_: any, formData: FormData) => {
   const data = {
     username: formData.get('username'),
     email: formData.get('email'),
@@ -38,7 +64,7 @@ const formSchema = z
     confirmPassword: formData.get('confirmPassword'),
   };
 
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
     return result.error.flatten();
   }

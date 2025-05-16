@@ -4,7 +4,7 @@ import FormInput from '@/components/FormInput';
 import FormButton from '@/components/FormButton';
 import SocialLogin from '@/components/SocialLogin';
 import { useActionState, useState } from 'react';
-import { handleFormSubmit } from './actions';
+import { createAccount } from './actions';
 import { PASSWORD_MIN_LENGTH, USERNAME_MIN_LENGTH } from '@/lib/constants';
 
 export default function SignUpPage() {
@@ -13,7 +13,7 @@ export default function SignUpPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const [state, action] = useActionState(handleFormSubmit, null);
+  const [state, action] = useActionState(createAccount, null);
 
   return (
     <section className='flex flex-col gap-8 py-10 min-h-screen justify-center'>
