@@ -4,31 +4,17 @@ import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, USERNAME_MAX_LENGTH, USERNAME
 import db from '@/lib/db';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-import { getIronSession, IronSession } from 'iron-session';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/session';
+import { findUniqUserByEmail, findUniqUserByUsername } from '@/service/user';
 
-const isExistByUsername = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      username
-    },
-    select: {
-      id: true
-    }
-  })
+const isUserExistByUsername = async (username: string) => {
+  const user = await findUniqUserByUsername(username, {id: true})
   return !Boolean(user)
 }
 
-const isExistByEmail = async (email: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      email
-    },
-    select: {
-      id: true
-    }
-  })
+const isUserExistByEmail = async (email: string) => {
+  const user = await findUniqUserByEmail(email, {id: true})
   return !Boolean(user)
 }
 
@@ -41,8 +27,8 @@ const formSchema = z
       .regex(/[A-Za-z]/, 'Must include at least one character')
       .toLowerCase()
       .trim()
-      .refine(isExistByUsername, 'This username is already taken'),
-    email: z.string().email().toLowerCase().trim().refine(isExistByEmail, 'There is an account already registered with this email'),
+      .refine(isUserExistByUsername, 'This username is already taken'),
+    email: z.string().email().toLowerCase().trim().refine(isUserExistByEmail, 'There is an account already registered with this email'),
     password: z
       .string()
       .min(PASSWORD_MIN_LENGTH, 'Password must be at least 8 characters')
@@ -85,10 +71,7 @@ const formSchema = z
       }
     })
 
-    const session = await getIronSession(await cookies(), {
-      cookieName: 'user-auth',
-      password: process.env.SESSION_SECRET!
-    })
+    const session = await getSession();
 
     session.id = user.id
     await session.save();
