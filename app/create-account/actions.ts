@@ -4,6 +4,9 @@ import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH, USERNAME_MAX_LENGTH, USERNAME
 import db from '@/lib/db';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
+import { getIronSession, IronSession } from 'iron-session';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 const isExistByUsername = async (username: string) => {
   const user = await db.user.findUnique({
@@ -81,5 +84,14 @@ const formSchema = z
         id: true
       }
     })
+
+    const session = await getIronSession(await cookies(), {
+      cookieName: 'user-auth',
+      password: process.env.SESSION_SECRET!
+    })
+
+    session.id = user.id
+    await session.save();
+    redirect('/profile')
   }
 };
