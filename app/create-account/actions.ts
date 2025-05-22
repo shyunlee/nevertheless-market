@@ -26,9 +26,8 @@ const formSchema = z
       .max(USERNAME_MAX_LENGTH, 'Username should not exceed 15 characters')
       .regex(/[A-Za-z]/, 'Must include at least one character')
       .toLowerCase()
-      .trim()
-      .refine(isUserExistByUsername, 'This username is already taken'),
-    email: z.string().email().toLowerCase().trim().refine(isUserExistByEmail, 'There is an account already registered with this email'),
+      .trim(),
+    email: z.string().email().toLowerCase().trim(),
     password: z
       .string()
       .min(PASSWORD_MIN_LENGTH, 'Password must be at least 8 characters')
@@ -38,6 +37,30 @@ const formSchema = z
       .regex(/[0-9]/, 'Must include at least one number')
       .regex(/[^A-Za-z0-9]/, 'Must include at least one special character'),
     confirmPassword: z.string(),
+  })
+  .superRefine(async ({username}, ctx) => {
+    const user = await isUserExistByUsername(username)
+    if (user) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'This username is already taken',
+        path: ['username'],
+        fatal: true
+      })
+    }
+    return z.NEVER;
+  })
+  .superRefine(async ({email}, ctx) => {
+    const user = await isUserExistByEmail(email)
+    if (user) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'There is an account already registered with this email',
+        path: ['email'],
+        fatal: true
+      })
+    }
+    return z.NEVER;
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
