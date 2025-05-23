@@ -95,7 +95,6 @@ const formSchema = z
     })
 
     const session = await getSession();
-
     session.id = user.id
     await session.save();
     redirect('/profile')

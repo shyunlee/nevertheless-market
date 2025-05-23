@@ -33,12 +33,12 @@ export const login = async (_: any, formData: FormData) => {
     password: formData.get('password'),
   };
 
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
     return result.error.flatten();
   } else {
     const { email, password } = result.data;
-    const user = await findUniqUserByEmail(email, {password: true})
+    const user = await findUniqUserByEmail(email, {id: true, password: true})
     const isPasswordCorrect = await bcrypt.compare(password, user!.password ?? '')
     if (isPasswordCorrect) {
       const session = await getSession();
