@@ -23,3 +23,11 @@ export async function findUniqUserByUsername(username: string, select?: UserData
     select
   })
 }
+
+export async function findUniqUserByid(id: number) {
+  return await db.user.findUnique({
+    where: {
+      id
+    },
+  })
+}

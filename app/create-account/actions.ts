@@ -10,12 +10,12 @@ import { findUniqUserByEmail, findUniqUserByUsername } from '@/service/user';
 
 const isUserExistByUsername = async (username: string) => {
   const user = await findUniqUserByUsername(username, {id: true})
-  return !Boolean(user)
+  return Boolean(user)
 }
 
 const isUserExistByEmail = async (email: string) => {
   const user = await findUniqUserByEmail(email, {id: true})
-  return !Boolean(user)
+  return Boolean(user)
 }
 
 const formSchema = z

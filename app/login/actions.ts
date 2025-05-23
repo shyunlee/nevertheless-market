@@ -43,6 +43,7 @@ export const login = async (_: any, formData: FormData) => {
     if (isPasswordCorrect) {
       const session = await getSession();
       session.id = user!.id;
+      await session.save();
       redirect('/profile')
     } else {
       return {fieldErrors: {
