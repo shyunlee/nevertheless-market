@@ -1,5 +1,5 @@
-import { getSession } from "@/lib/session";
-import { createNewUser } from "@/service/user";
+import { saveSessionId } from "@/lib/session";
+import { createNewGithubUser } from "@/service/user";
 import { notFound, redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
@@ -29,15 +29,13 @@ import { NextRequest } from "next/server";
     },
     cache: "no-cache"
   }).then(res => res.json())
-  const newUser = await createNewUser({
+  const newUser = await createNewGithubUser({
     github_id: id + '',
     username: login,
     email,
     avatar: avatar_url
   })
-  const session = await getSession()
-  session.id = newUser.id
-  await session.save();
+  await saveSessionId(newUser.id)
 
   return redirect('/profile')
  }

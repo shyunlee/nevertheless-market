@@ -11,3 +11,9 @@ export async function getSession() {
       password: process.env.SESSION_SECRET!
     })
 }
+
+export async function saveSessionId(id: number) {
+  const session = await getSession()
+  session.id = id
+  return await session.save();
+}

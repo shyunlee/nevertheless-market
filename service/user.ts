@@ -41,13 +41,13 @@ export async function findUniqUserByid(id: number) {
   })
 }
 
-export async function createNewUser(user: CreateNewUser) {
-  const existingUser = await findUniqUserByUsername(user.username, {id: true});
-  if (existingUser) {
+export async function createNewGithubUser(user: CreateNewUser) {
+  const existingUser = await findUniqUserByUsername(user.username);
+  if (existingUser && existingUser.github_id) {
     return existingUser;
   }
   return await db.user.create({
-    data: user,
+    data: {...user, username: existingUser ? `${user.username}-github` : user.username},
     select: {
       id: true
     }

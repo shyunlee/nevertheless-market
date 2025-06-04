@@ -18,7 +18,7 @@ export default async function Profile() {
   const logout = async () => {
     'use server'
     const session = await getSession();
-    await session.destroy();
+    session.destroy();
     redirect('/')
   }
   return (

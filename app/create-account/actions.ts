@@ -5,7 +5,7 @@ import db from '@/lib/db';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/session';
+import { saveSessionId } from '@/lib/session';
 import { findUniqUserByEmail, findUniqUserByUsername } from '@/service/user';
 
 const isUserExistByUsername = async (username: string) => {
@@ -94,9 +94,7 @@ const formSchema = z
       }
     })
 
-    const session = await getSession();
-    session.id = user.id
-    await session.save();
+    await saveSessionId(user.id);
     redirect('/profile')
   }
 };

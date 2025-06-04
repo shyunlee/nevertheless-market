@@ -1,7 +1,7 @@
 'use server';
 
 import { PASSWORD_MAX_LENGTH, PASSWORD_MIN_LENGTH } from '@/lib/constants';
-import { getSession } from '@/lib/session';
+import { saveSessionId } from '@/lib/session';
 import { findUniqUserByEmail } from '@/service/user';
 import bcrypt from 'bcrypt';
 import { redirect } from 'next/navigation';
@@ -41,9 +41,7 @@ export const login = async (_: any, formData: FormData) => {
     const user = await findUniqUserByEmail(email, {id: true, password: true})
     const isPasswordCorrect = await bcrypt.compare(password, user!.password ?? '')
     if (isPasswordCorrect) {
-      const session = await getSession();
-      session.id = user!.id;
-      await session.save();
+      await saveSessionId(user!.id)
       redirect('/profile')
     } else {
       return {fieldErrors: {
