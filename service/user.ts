@@ -3,6 +3,7 @@ import db from '@/lib/db';
 type UserDataSelectOption = {
   id?: boolean;
   password?: boolean;
+  phone?: boolean;
 }
 
 type CreateNewUser = {
@@ -38,6 +39,17 @@ export async function findUniqUserByid(id: number) {
     where: {
       id
     },
+  })
+}
+
+export async function findUserByPhone(phone: string, select?: UserDataSelectOption) {
+  return await db.user.findFirst({
+    where: {
+      phone: {
+        endsWith: phone
+      }
+    },
+    select
   })
 }
 
