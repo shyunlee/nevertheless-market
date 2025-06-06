@@ -3,11 +3,17 @@
 import { z } from "zod";
 import validator from 'validator';
 import { redirect } from "next/navigation";
-import { getToken, deleteTokenForPhone, createOrSaveUserWithSmsToken } from "@/service/token";
+import { getToken, deleteTokenForPhone, createOrSaveUserWithSmsToken, findToken, deleteToken } from "@/service/token";
+import { saveSessionId } from "@/lib/session";
 
 const phoneSchema = z.string().trim().refine((phone) => validator.isMobilePhone(phone, "en-US"), "Wrong phone number format");
 
-const tokenSchema = z.coerce.number().min(100000).max(999999);
+const tokenSchema = z.coerce.number().min(100000).max(999999).refine(istokenExist, "This token does not exist.");
+
+async function istokenExist(token: number) {
+  const tokenFound = await findToken(token.toString())
+  return !!tokenFound
+}
 
 type SMSStateType = {
   token: boolean;
@@ -35,9 +41,15 @@ export const verifySms = async (prevState: SMSStateType, formData: FormData) => 
       }
     } 
   } else {
-    const result = tokenSchema.safeParse(token)
+    const result = await tokenSchema.safeParseAsync(token)
     if (result.success) {
-      redirect('/')
+      const token = result.data.toString();
+      const userFound = await findToken(token, {id: true, userId: true})
+      if (userFound) {
+        await saveSessionId(userFound.userId)
+        await deleteToken(userFound.id)
+      }
+      redirect('/profile')
     } else {
       return {
         token: true,

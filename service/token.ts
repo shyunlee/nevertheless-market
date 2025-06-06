@@ -6,6 +6,7 @@ type TokenDataSelectOption = {
   id?: boolean;
   token?: boolean;
   user?: boolean;
+  userId?: boolean;
 };
 
 export async function findToken(token: string, select?: TokenDataSelectOption) {
@@ -27,6 +28,14 @@ export async function deleteTokenForPhone(phone: string) {
       },
     },
   });
+}
+
+export async function deleteToken(id: number) {
+  return await db.tokenSMS.delete({
+    where: {
+      id
+    }
+  })
 }
 
 export async function getToken() {
