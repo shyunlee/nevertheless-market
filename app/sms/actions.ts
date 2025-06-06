@@ -5,6 +5,7 @@ import validator from 'validator';
 import { redirect } from "next/navigation";
 import { getToken, deleteTokenForPhone, createOrSaveUserWithSmsToken, findToken, deleteToken } from "@/service/token";
 import { saveSessionId } from "@/lib/session";
+import { sendTwilioSMSToken } from "@/lib/twilio";
 
 const phoneSchema = z.string().trim().refine((phone) => validator.isMobilePhone(phone, "en-US"), "Wrong phone number format");
 
@@ -28,9 +29,8 @@ export const verifySms = async (prevState: SMSStateType, formData: FormData) => 
     if(result.success) {
       await deleteTokenForPhone(result.data);
       const tokenCreated = await getToken();
-      const saveTokenUser = await createOrSaveUserWithSmsToken(tokenCreated, result.data);
-      console.log(saveTokenUser)
-      // send token by using twilio
+      await createOrSaveUserWithSmsToken(tokenCreated, result.data);
+      await sendTwilioSMSToken(tokenCreated)
       return {
         token: true
       }
