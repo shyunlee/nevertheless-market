@@ -13,7 +13,7 @@ async function getUserDataById() {
   notFound();
 }
 
-export default async function Profile() {
+export default async function ProfilePage() {
   const user = await getUserDataById();
   const logout = async () => {
     'use server'

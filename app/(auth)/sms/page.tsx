@@ -5,7 +5,7 @@ import FormButton from '@/components/FormButton';
 import { useActionState, useState } from 'react';
 import { verifySms } from './actions';
 
-export default function SMSLogin() {
+export default function SMSLoginPage() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [token, setToken] = useState('');
 
