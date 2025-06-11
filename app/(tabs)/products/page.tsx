@@ -1,12 +1,12 @@
-export async function getProducts() {
-  return new Promise(resolve => setTimeout(resolve, 5000))
-}
+import ListProduct from "@/components/ListProduct"
+import { getAllProducts } from "@/service/product"
 
 export default async function ProductsPage() {
-  const products = await getProducts()
+  const products = await getAllProducts()
+  console.log(products)
   return (
-    <>
-      <h1>Products!</h1>
-    </>
+    <section className='py-10'>
+      {products.map((product) => <ListProduct key={product.id} product={product} />)}
+    </section>
   )
 };

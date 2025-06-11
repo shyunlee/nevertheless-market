@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={openSans.className}>
       <body
-        className='w-full bg-neutral-900 max-w-sm mx-auto text-white overflow-auto '
+        className='w-full bg-neutral-900 max-w-lg mx-auto text-white overflow-auto '
       >
         {children}
       </body>
