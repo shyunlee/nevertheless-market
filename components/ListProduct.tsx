@@ -1,13 +1,14 @@
+import { formatCurrencyNumber, formatTimeAgo } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
 
 type Product = {
   id: number;
   title: string;
-  price?: number;
+  price: number;
   description?: string;
   photo?: string;
-  created_at?: Date;
+  created_at: Date;
   updated_at?: Date;
 };
 
@@ -33,9 +34,9 @@ export default function ListProduct({ product }: ListProductProps) {
       </div>
       <div className='flex flex-col gap-1'>
         <span>{title}</span>
-        <span>{`$ ${price}`}</span>
+        <span>{`${formatCurrencyNumber(price)} USD`}</span>
         <span>{description}</span>
-        <span>{createdAt}</span>
+        <span>{formatTimeAgo(createdAt)}</span>
       </div>
     </Link>
   );
