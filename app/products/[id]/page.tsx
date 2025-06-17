@@ -1,5 +1,4 @@
 import ProductDetails from '@/components/ProductDetails';
-import { DEFAULT_PROFILE_IMAGE } from '@/lib/constants';
 import { getSession } from '@/lib/session';
 import { formatCurrencyNumber, formatTimeAgo } from '@/lib/utils';
 import { getProductDetail } from '@/service/product';
@@ -42,7 +41,7 @@ export default async function ProductDetailPage({
     createdAt: formatTimeAgo(created_at),
     updatedAt: formatTimeAgo(updated_at),
     username: user.username,
-    userAvatar: DEFAULT_PROFILE_IMAGE
+    userAvatar: user.avatar
   }
 
   return (

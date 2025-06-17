@@ -6,7 +6,7 @@ import Link from 'next/link';
 type ProductDetailsProps = {
   product: DetailProduct & {
     username: string;
-    userAvatar: string;
+    userAvatar: string | null;
   };
   isOwner: boolean;
 };
@@ -19,8 +19,8 @@ export default function ProductDetails({ product, isOwner }: ProductDetailsProps
         <Image fill src={photo} alt={title} />
       </div>
       <div className='p-5 flex items-center gap-3 border-b border-neutral-700'>
-        <div className='size-10 rounded-full'>
-          {userAvatar !== null ? (
+        <div className={`size-10 rounded-full ${!userAvatar ? 'p-1 bg-neutral-600': ''}`}>
+          {!!userAvatar ? (
             <Image
               src={userAvatar}
               width={40}
@@ -40,7 +40,7 @@ export default function ProductDetails({ product, isOwner }: ProductDetailsProps
         <p>{description}</p>
       </div>
       <div className='fixed w-full bottom-0 left-0 p-5 pb-10 bg-neutral-800 flex justify-around items-center'>
-        <span className='font-semibold text-xl'>
+        <span className='font-semibold text-2xl'>
           $ {price}
         </span>
         {isOwner ? (

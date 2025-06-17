@@ -7,5 +7,5 @@ export type DetailProduct = {
   createdAt: string;
   updatedAt: string;
   username?: string;
-  userAvatar?: string;
+  userAvatar?: string | null;
 }
