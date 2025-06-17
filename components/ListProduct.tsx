@@ -18,11 +18,7 @@ type ListProductProps = {
 
 export default function ListProduct({ product }: ListProductProps) {
   const { id, title, price, description, photo, created_at } = product;
-  const createdAt = new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(created_at);
+
   return (
     <Link href={`/products/${id}`} className='flex gap-5'>
       <div className='relative size-28 rounded-md overflow-hidden'>
@@ -36,7 +32,7 @@ export default function ListProduct({ product }: ListProductProps) {
         <span>{title}</span>
         <span>{`${formatCurrencyNumber(price)} USD`}</span>
         <span>{description}</span>
-        <span>{formatTimeAgo(createdAt)}</span>
+        <span>{formatTimeAgo(created_at)}</span>
       </div>
     </Link>
   );

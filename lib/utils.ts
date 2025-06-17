@@ -8,7 +8,12 @@ export function formatCurrencyNumber(amount: number): string {
   }).format(amount);  
 }
 
-export function formatTimeAgo(date: string): string {
-  return format(date)
+export function formatTimeAgo(date: Date): string {
+  const createdAt = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(date);
+  return format(createdAt)
 
 }
