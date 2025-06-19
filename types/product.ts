@@ -1,3 +1,6 @@
+import { getProductsByPage } from "@/service/product";
+import { Prisma } from "@prisma/client";
+
 export type DetailProduct = {
   id: string;
   title: string;
@@ -9,3 +12,5 @@ export type DetailProduct = {
   username?: string;
   userAvatar?: string | null;
 }
+
+export type ProductsList = Prisma.PromiseReturnType<typeof getProductsByPage>

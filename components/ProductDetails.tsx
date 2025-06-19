@@ -22,6 +22,7 @@ export default function ProductDetails({ product, isOwner }: ProductDetailsProps
         <div className={`size-10 rounded-full ${!userAvatar ? 'p-1 bg-neutral-600': ''}`}>
           {!!userAvatar ? (
             <Image
+              className='object-cover'
               src={userAvatar}
               width={40}
               height={40}
@@ -39,7 +40,7 @@ export default function ProductDetails({ product, isOwner }: ProductDetailsProps
         <h1 className='text-2xl font-semibold'>{title}</h1>
         <p>{description}</p>
       </div>
-      <div className='fixed w-full bottom-0 left-0 p-5 pb-10 bg-neutral-800 flex justify-around items-center'>
+      <div className='fixed w-full bottom-0 left-0 p-5 pb-10 bg-neutral-800 flex justify-evenly items-center'>
         <span className='font-semibold text-2xl'>
           $ {price}
         </span>

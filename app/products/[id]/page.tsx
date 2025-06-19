@@ -45,7 +45,7 @@ export default async function ProductDetailPage({
   }
 
   return (
-    <section>
+    <section className='p-10'>
       <ProductDetails
         product={productDetail}
         isOwner={isOwner} 

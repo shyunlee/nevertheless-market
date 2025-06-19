@@ -16,20 +16,21 @@ type ListProductProps = {
   product: Product;
 };
 
-export default function ListProduct({ product }: ListProductProps) {
+export default function ListProductCard({ product }: ListProductProps) {
   const { id, title, price, description, photo, created_at } = product;
 
   return (
     <Link href={`/products/${id}`} className='flex gap-5'>
-      <div className='relative size-28 rounded-md overflow-hidden'>
+      <div className='relative size-30 rounded-md overflow-hidden'>
         <Image
-          src={photo ? photo : 'https://picsum.photos/200'}
+          className='object-cover'
+          src={photo ? photo : 'https://picsum.photos/500'}
           alt={title}
           fill
         />
       </div>
-      <div className='flex flex-col gap-1'>
-        <span>{title}</span>
+      <div className='flex flex-col gap-1 *:text-orange-100'>
+        <span className='text-2xl text-orange-300!'>{title}</span>
         <span>{`${formatCurrencyNumber(price)} USD`}</span>
         <span>{description}</span>
         <span>{formatTimeAgo(created_at)}</span>
