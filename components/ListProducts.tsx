@@ -13,26 +13,35 @@ export default function ListProducts({ initialProducts }: ProductsListProps) {
   const [products, setProducts] = useState(initialProducts);
   const [isLoading, setIsLoading] = useState(false);
   const [nextPage, setNextPage] = useState(2);
+  const [isLastPage, setIsLastPage] = useState(false);
 
   const onLoadMoreClick = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const moreProducts = await getMoreProducts(nextPage);
-    setProducts((prev) => [...prev, ...moreProducts])
-    setNextPage((prev) => prev+1)
-    setIsLoading(false)
-  }
+    if (moreProducts.length !== 0) {
+      setNextPage((prev) => prev + 1);
+      setProducts((prev) => [...prev, ...moreProducts]);
+    } else {
+      setIsLastPage(true);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <>
       {products.map((product) => (
         <ListProductCard key={product.id} product={product} />
       ))}
-      <button 
-        onClick={onLoadMoreClick}
-        className='text-sm font-semibold text-orange-300 hover:text-orange-200 active:scale-95 cursor-pointer'
-      >
-        {isLoading ? 'Loading': 'Load More' }
-      </button>
+      {isLastPage ? (
+        'No more items'
+      ) : (
+        <button
+          onClick={onLoadMoreClick}
+          className='text-sm font-semibold text-orange-300 hover:text-orange-200 active:scale-95 cursor-pointer'
+        >
+          {isLoading ? 'Loading' : 'Load More'}
+        </button>
+      )}
     </>
   );
 }
