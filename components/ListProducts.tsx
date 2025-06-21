@@ -2,7 +2,7 @@
 
 import { ProductsList } from '@/types/product';
 import ListProductCard from './ListProductCard';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getMoreProducts } from '@/app/(tabs)/products/action';
 
 type ProductsListProps = {
@@ -12,35 +12,59 @@ type ProductsListProps = {
 export default function ListProducts({ initialProducts }: ProductsListProps) {
   const [products, setProducts] = useState(initialProducts);
   const [isLoading, setIsLoading] = useState(false);
-  const [nextPage, setNextPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [isLastPage, setIsLastPage] = useState(false);
+  const trigger = useRef<HTMLSpanElement>(null);
 
-  const onLoadMoreClick = async () => {
+  const onLoadMoreClick = useCallback(async () => {
     setIsLoading(true);
-    const moreProducts = await getMoreProducts(nextPage);
+    const moreProducts = await getMoreProducts(page);
     if (moreProducts.length !== 0) {
-      setNextPage((prev) => prev + 1);
+      setPage((prev) => prev + 1);
       setProducts((prev) => [...prev, ...moreProducts]);
     } else {
       setIsLastPage(true);
     }
     setIsLoading(false);
-  };
+  }, [page]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      async (
+        entries: IntersectionObserverEntry[],
+        observer: IntersectionObserver
+      ) => {
+        const element = entries[0];
+        if (element.isIntersecting && trigger.current) {
+          observer.unobserve(trigger.current);
+          await onLoadMoreClick();
+        }
+      },
+      {
+        threshold: 1.0,
+      }
+    );
+    if (trigger.current) {
+      observer.observe(trigger.current);
+    }
+    return () => {
+      observer.disconnect();
+    };
+  }, [page, onLoadMoreClick]);
 
   return (
     <>
-      {products.map((product) => (
-        <ListProductCard key={product.id} product={product} />
+      {products.map((product, index) => (
+        <ListProductCard key={index} product={product} />
       ))}
-      {isLastPage ? (
-        'No more items'
-      ) : (
-        <button
-          onClick={onLoadMoreClick}
-          className='text-sm font-semibold text-orange-300 hover:text-orange-200 active:scale-95 cursor-pointer'
+      {isLastPage ? null : (
+        <span
+          ref={trigger}
+          style={{marginTop: `${page + 1 * 300}vh`}}
+          className='text-sm font-semibold text-orange-300 mx-auto hover:text-orange-200 active:scale-95 cursor-pointer'
         >
           {isLoading ? 'Loading' : 'Load More'}
-        </button>
+        </span>
       )}
     </>
   );
