@@ -40,12 +40,12 @@ export default function ProductDetails({ product, isOwner }: ProductDetailsProps
         <h1 className='text-2xl font-semibold'>{title}</h1>
         <p>{description}</p>
       </div>
-      <div className='fixed w-full bottom-0 left-0 p-5 pb-10 bg-neutral-800 flex justify-evenly items-center'>
+      <div className='fixed w-full bottom-0 left-1/2 -translate-x-1/2 max-w-lg p-5 bg-neutral-800 flex justify-around items-center'>
         <span className='font-semibold text-2xl'>
           $ {price}
         </span>
         {isOwner ? (
-          <button className='bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold'>
+          <button className='bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold cursor-pointer'>
             Delete product
           </button>
         ) : null}

@@ -60,7 +60,7 @@ export default function ListProducts({ initialProducts }: ProductsListProps) {
       {isLastPage ? null : (
         <span
           ref={trigger}
-          style={{marginTop: `${page + 1 * 300}vh`}}
+          style={{marginTop: `${50}vh`}}
           className='text-sm font-semibold text-orange-300 mx-auto hover:text-orange-200 active:scale-95 cursor-pointer'
         >
           {isLoading ? 'Loading' : 'Load More'}

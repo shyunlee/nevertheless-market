@@ -3,8 +3,6 @@ import { getProductsByPage } from "@/service/product"
 
 export default async function ProductsPage() {
   const products = await getProductsByPage(1)
-  // const products1 = await getProductsByPage(1)
-  // const products = [...products1, ...products1, ...products1]
   
   return (
     <section className='py-10 flex flex-col gap-6'>

@@ -9,7 +9,7 @@ export async function getAllProducts() {
 }
 
 export async function getProductsByPage(page: number) {
-    const numberInPage = 2;
+    const numberInPage = 4;
     return await db.product.findMany({
     orderBy: {
       created_at: 'desc'
