@@ -4,10 +4,11 @@ import { PhotoIcon } from '@heroicons/react/24/solid';
 import FormInput from './FormInput';
 import { useState } from 'react';
 import { uploadProduct } from '@/app/products/add/action';
+import FormButton from './FormButton';
 
 export default function FormAddProduct() {
   const [titleValue, setTitleValue] = useState('');
-  const [priceValue, setPriceValue] = useState<number>();
+  const [priceValue, setPriceValue] = useState('');
   const [descriptionValue, setDescriptionValue] = useState('');
   const [preview, setPreview] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -18,7 +19,7 @@ export default function FormAddProduct() {
         setTitleValue(e.target.value);
         break;
       case 'price':
-        setPriceValue(Number(e.target.value));
+        setPriceValue(e.target.value);
         break;
       case 'description':
         setDescriptionValue(e.target.value);
@@ -78,7 +79,7 @@ export default function FormAddProduct() {
           name='price'
           required
           placeholder='Price'
-          type='number'
+          type='text'
           value={priceValue}
           onChange={inputChange}
         />
@@ -90,6 +91,7 @@ export default function FormAddProduct() {
           value={descriptionValue}
           onChange={inputChange}
         />
+        <FormButton text='Add Product'/>
       </form>
     </>
   );

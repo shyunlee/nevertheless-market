@@ -2,7 +2,7 @@ import { InputHTMLAttributes } from "react";
 
 type FormInputProps = {
   name: string;
-  value?: string | number;
+  value: string;
   errors?: string[];
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
