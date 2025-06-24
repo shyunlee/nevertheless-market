@@ -1,8 +1,8 @@
 'use client';
 
-import { PhotoIcon } from "@heroicons/react/24/solid";
-import FormInput from "./FormInput";
-import { useState } from "react";
+import { PhotoIcon } from '@heroicons/react/24/solid';
+import FormInput from './FormInput';
+import { useState } from 'react';
 
 export default function FormAddProduct() {
   const [titleValue, setTitleValue] = useState('');
@@ -10,32 +10,57 @@ export default function FormAddProduct() {
   const [descriptionValue, setDescriptionValue] = useState('');
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value)
+    console.log(e.target.value);
     switch (e.target.name) {
       case 'title':
-        setTitleValue(e.target.value)
+        setTitleValue(e.target.value);
         break;
       case 'price':
-        setPriceValue(Number(e.target.value))
+        setPriceValue(Number(e.target.value));
         break;
       case 'description':
-        setDescriptionValue(e.target.value)
+        setDescriptionValue(e.target.value);
       default:
         break;
     }
-  }
+  };
+
   return (
     <>
-      <form>
-        <label>
+      <form className='flex flex-col gap-5'>
+        <label
+          htmlFor='photo'
+          className='aspect-square border-2 border-neutral-300 border-dashed rounded-md flex flex-col justify-center items-center text-neutral-300 cursor-pointer active:*:scale-98'
+        >
           <PhotoIcon className='w-20' />
           <div className='text-neutral-400 text-sm'>Add photo here</div>
         </label>
-        <input type="file" id='photo' name='photo' />
-        <FormInput name='title' required placeholder='Title' type='text' value={titleValue} onChange={inputChange}/>
-        <FormInput name='price' required placeholder='Price' type='number' value={priceValue} onChange={inputChange}/>
-        <FormInput name='description' required placeholder='Description' type='text' value={descriptionValue} onChange={inputChange}/>
+        <input type='file' id='photo' name='photo' hidden />
+        <FormInput
+          name='title'
+          required
+          placeholder='Title'
+          type='text'
+          value={titleValue}
+          onChange={inputChange}
+        />
+        <FormInput
+          name='price'
+          required
+          placeholder='Price'
+          type='number'
+          value={priceValue}
+          onChange={inputChange}
+        />
+        <FormInput
+          name='description'
+          required
+          placeholder='Description'
+          type='text'
+          value={descriptionValue}
+          onChange={inputChange}
+        />
       </form>
     </>
-  )
-};
+  );
+}
