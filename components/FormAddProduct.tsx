@@ -3,7 +3,7 @@
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import FormInput from './FormInput';
 import { useState } from 'react';
-import { uploadProduct } from '@/app/products/add/action';
+import { getUploadUrl, uploadProduct } from '@/app/products/add/action';
 import FormButton from './FormButton';
 
 export default function FormAddProduct() {
@@ -12,6 +12,7 @@ export default function FormAddProduct() {
   const [descriptionValue, setDescriptionValue] = useState('');
   const [preview, setPreview] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [uploadUrl, setUploadUrl] = useState('');
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
@@ -28,7 +29,7 @@ export default function FormAddProduct() {
     }
   };
 
-  const onImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const {target:{files}} = e;
     if (!files) {
       return;
@@ -45,6 +46,12 @@ export default function FormAddProduct() {
       }
       const url = URL.createObjectURL(file)
       setPreview(url)
+      const response = await getUploadUrl();
+      const {result, success} = response
+      if (success) {
+        const {id, uploadUrl} = result
+        setUploadUrl(uploadUrl)
+      }
       if (errorMessage) {
         setErrorMessage('')
       }
