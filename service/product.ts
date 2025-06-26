@@ -1,4 +1,5 @@
 import db from '@/lib/db';
+import { AddProduct } from '@/types/product';
 
 export async function getAllProducts() {
   return await db.product.findMany({
@@ -31,6 +32,26 @@ export async function getProductDetail(id: number) {
           avatar: true
         }
       }
+    }
+  })
+}
+
+export async function addProduct(product: AddProduct) {
+  const {title, price, description, photo, userId} = product
+  return await db.product.create({
+    data: {
+      title,
+      description,
+      price,
+      photo,
+      user: {
+        connect: {
+          id: userId
+        }
+      }
+    }, 
+    select: {
+      id: true
     }
   })
 }

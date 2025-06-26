@@ -2,8 +2,8 @@
 
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import FormInput from './FormInput';
-import { useState } from 'react';
-import { getUploadUrl, uploadProduct } from '@/app/products/add/action';
+import { useActionState, useState } from 'react';
+import { getUploadUrl, uploadImageToCloudflare, uploadProduct } from '@/app/products/add/action';
 import FormButton from './FormButton';
 
 export default function FormAddProduct() {
@@ -13,6 +13,7 @@ export default function FormAddProduct() {
   const [preview, setPreview] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [uploadUrl, setUploadUrl] = useState('');
+  const [imageId, setImageId] = useState('');
 
   const inputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
@@ -49,27 +50,55 @@ export default function FormAddProduct() {
       const response = await getUploadUrl();
       const {result, success} = response
       if (success) {
-        const {id, uploadUrl} = result
-        setUploadUrl(uploadUrl)
+        const {id, uploadURL} = result
+        setUploadUrl(uploadURL)
+        setImageId(id)
       }
       if (errorMessage) {
         setErrorMessage('')
       }
   }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const uploadDataWithImage = async (_: any, formData: FormData) => {
+    const file = formData.get('photo') as File;
+    if (!file.size) {
+      setErrorMessage('Image is required')
+      return;
+    } else {
+      const imageFormData = new FormData()
+      imageFormData.append('file', file)
+      const response = await uploadImageToCloudflare(uploadUrl, imageFormData)
+      console.log(response)
+      if (response.status !== 200) {
+        setErrorMessage('Uploading image is failed.')
+        return;
+      }
+      const photoUrl = `https://imagedelivery.net/6thDIgFwN0RyTlRSS8X9fw/${imageId}`
+      formData.set('photo', photoUrl);
+
+      return await uploadProduct(_, formData)
+    }
+    
+
+  }
+
+
+  const [state, action] = useActionState(uploadDataWithImage, null)
+
   return (
     <>
-      <form action={uploadProduct} className='flex flex-col gap-5'>
+      <form action={action} className='flex flex-col gap-5'>
         <label
           htmlFor='photo'
           className='aspect-square border-2 border-neutral-300 border-dashed rounded-md flex flex-col justify-center items-center text-neutral-300 cursor-pointer active:*:scale-98 bg-center bg-cover'
-          style={{backgroundImage: `url(${preview})`}}
+          style={!state?.fieldErrors.photo ? {backgroundImage: `url(${preview})`} : undefined}
         >
-          {!preview ? (
+          {state?.fieldErrors.photo || !preview ? (
             <>
               <PhotoIcon className='w-20' />
               <div className='text-neutral-400 text-sm'>Add photo here</div>
-              <span className='text-sm text-red-400'>{errorMessage}</span>
+              <span className='text-sm text-red-400'>{errorMessage ? errorMessage : state?.fieldErrors.photo}</span>
             </>
           ): null}
         </label>

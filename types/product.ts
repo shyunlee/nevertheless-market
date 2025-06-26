@@ -14,3 +14,11 @@ export type DetailProduct = {
 }
 
 export type ProductsList = Prisma.PromiseReturnType<typeof getProductsByPage>
+
+export type AddProduct = {
+  title: string;
+  price: number;
+  description: string;
+  photo: string;
+  userId: number;
+}
